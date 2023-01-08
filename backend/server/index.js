@@ -7,16 +7,7 @@ app.use(cors());
 app.use(express.json());
 
 const query = require("query-mysql");
-query.configure({
-  host: "localhost",
-  user: "root",
-  password: "",
-  database: "security",
-});
 
-query.base.fetchById("users", "noob", "username", (msg, res) => {
-  console.log(msg, res);
-});
 // Route to get user
 app.get("/api/get/:id", (req, res) => {
   
@@ -29,11 +20,59 @@ app.get("/api/get/:id", (req, res) => {
     password: "",
     database: "security",
   });
-  query.base.fetchById("users", userId, "username", (msg, resp) => {
+  query.base.fetchById("users", userId, "email", (msg, resp) => {
     console.log(msg, resp);
     res.send(resp);
   });
 });
+// Route to get user
+app.get("/api/login/:id/:pass", (req, res) => {
+  
+  const userId = req.params.id.toString();
+  const pass = req.params.pass.toString();
+  console.log(userId);
+  query.configure({
+    host: "localhost",
+    user: "root",
+    password: "",
+    database: "security",
+  });
+  query.base.fetchById("users", userId, "email", (msg, resp) => 
+  {
+    console.log("MSG: " + msg)
+    if (resp[0].password === pass)
+    {
+      res.send('OK');
+    }
+    else
+    {
+      res.status(403);
+      res.send("None shall pass");
+    }
+  });
+});
+
+app.post("/api/add_user", function (req, res) {
+
+  let obj = {
+    email: req.body.email,
+    password: req.body.password,
+    age: req.body.age,
+    name: req.body.name
+  }
+  //res.end(JSON.stringify(response));
+  query.configure({
+    host: "localhost",
+    user: "root",
+    password: "",
+    database: "security",
+  });
+  
+  query.base.create("users", obj, (msg, resp) => {
+    console.log(msg, resp);
+    res.send(resp);
+  });
+});  
 
 app.listen(PORT, () => {
   console.log(`Server is running on ${PORT}`);
