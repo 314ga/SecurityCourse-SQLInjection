@@ -25,12 +25,44 @@ app.get("/api/get/:id", (req, res) => {
     res.send(resp);
   });
 });
+
+app.post("/api/reset/:id/:psw/:oldpsw", (req, res) => {
+  const userId = req.params.id.toString();
+  const pswd = req.params.psw.toString();
+  const oldPswd = "'"+req.params.oldpsw.toString()+"'";
+
+  let obj = {
+    password: pswd,
+  };
+  query.configure({
+    host: "localhost",
+    user: "root",
+    password: "",
+    database: "security",
+  });
+  query.base.update(
+    "users",
+    obj,
+    oldPswd,
+    "email = '" + userId + "' AND password",
+    (msg, resp) => {
+      console.log(msg, resp);
+      res.send('OK');
+    }
+  );
+});
 // Route to get user
 app.get("/api/login/:id/:pass", (req, res) => {
   
   const userId = req.params.id.toString();
   const pass = req.params.pass.toString();
   console.log(userId);
+  let obj = {
+    email: req.body.email,
+    password: req.body.password,
+    age: req.body.age,
+    name: req.body.name,
+  };
   query.configure({
     host: "localhost",
     user: "root",

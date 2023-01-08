@@ -56,6 +56,34 @@ function App() {
 
   }
 
+  function handleLoginForm() {
+   
+    fetch("http://localhost:3002/api/get/MariaF@gmail.com", {
+      //'%20or%201=1--%20
+      method: "GET",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+    })
+      .then((r) => {
+        if (r.status === 200) {
+          return r.json();
+        } else {
+          return null;
+        }
+      })
+      .then((data) => {
+        console.log(data);
+      })
+      .catch((e) => {
+        console.log(e);
+      })
+      .catch((e) => {
+        console.log(e);
+      });
+  }
+
   return !isLoggedIn ? (
     <Container fluid className="justify-content-center">
       <div className="App mt-5 text-center">
@@ -89,14 +117,24 @@ function App() {
   ) : (
     <Container>
       <Button
-        variant="error"
+        variant="success"
         onClick={() => {
           setView(0);
           setIsLoggedIn(false);
         }}
       >
-       Log out
+        Log out
       </Button>{" "}
+      <button
+        type="submit"
+        style={{ padding: "15px", borderRadius: "10px", margin: "10px" }}
+        onClick={(e) => {
+          e.preventDefault();
+          handleLoginForm();
+        }}
+      >
+        Login
+      </button>
     </Container>
   );
 }
