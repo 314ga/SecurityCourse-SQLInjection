@@ -29,7 +29,7 @@ const Login = (props) => {
         if(r.status ===200)
         {
             setShowSuccess(true);
-            props.login(true);
+            props.login(email);
         }
         else
         {
