@@ -9,28 +9,37 @@ import Alert from "react-bootstrap/Alert";
 const ResetPassword = (props) => {
   const emailInputRef = useRef();
   const passwordInputRef = useRef();
+  const newInputRef = useRef();
   const [showSuccess, setShowSuccess] = useState(false);
   const [showError, setShowError] = useState(false);
   const [errorText, setErrorText] = useState("");
   function handleLoginForm() {
     const email = emailInputRef.current.value;
     const password = passwordInputRef.current.value;
+    const newPassword = newInputRef.current.value;
     const hashedPassword = md5(password);
+    const hashedNew = md5(newPassword);
 
     console.log(hashedPassword);
-    fetch("http://localhost:3002/api/login/" + email + "/" + hashedPassword, {
-      method: "GET",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-    })
+    fetch(
+      "http://localhost:3002/api/reset/" +
+        email +
+        "/" +
+        hashedPassword + "/" + hashedNew,
+      {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+      }
+    )
       .then((r) => {
-        if (r.status === 200) {
+        if (r  === "OK") {
           setShowSuccess(true);
           props.login(true);
         } else {
-          setErrorText("Wrong password or user does not exists");
+          setErrorText("Error changing password");
           setShowError(true);
         }
         console.log(r);
@@ -56,6 +65,12 @@ const ResetPassword = (props) => {
             ref={passwordInputRef}
             type="password"
             placeholder="Password"
+          />
+          <input
+            style={{ padding: "15px", borderRadius: "10px", margin: "10px" }}
+            ref={newInputRef}
+            type="password"
+            placeholder="New Password"
           />
           <button
             type="submit"
