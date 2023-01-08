@@ -40,6 +40,7 @@ app.get("/api/login/:id/:pass", (req, res) => {
   query.base.fetchById("users", userId, "email", (msg, resp) => 
   {
     console.log("MSG: " + msg)
+    console.log(resp);
     if (resp[0].password === pass)
     {
       res.send('OK');

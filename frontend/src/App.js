@@ -5,10 +5,12 @@ import { Button } from "react-bootstrap";
 
 import CreateUser from "./CreateUser";
 import Login from "./Login";
+import ResetPassword from "./ResetPassword";
 //import bcrypt from "bcryptjs";
 //const salt = bcrypt.genSaltSync(10);
 function App() {
  
+  const [isLoggedIn,setIsLoggedIn] = useState(false);
  const [view, setView] = useState(0);
  const renderView = (param) => {
    switch (param) {
@@ -27,10 +29,10 @@ function App() {
        );
      }
      case 2: {
-       return <Login/>;
+       return <Login login={logged} />;
      }
      case 3: {
-       return <></>;
+       return <ResetPassword/>;
      }
      case 4: {
        return <></>;
@@ -41,36 +43,60 @@ function App() {
    }
  };
  
+  const logged =(login)=>
+  {
+    if(login)
+    {
+      setIsLoggedIn(true);
+    }
+    else
+    {
+    setIsLoggedIn(false);
+    }
 
-  return (
+  }
+
+  return !isLoggedIn ? (
     <Container fluid className="justify-content-center">
-        <div className="App mt-5 text-center">
-          <Button
-            variant="primary"
-            onClick={() => {
-              setView(1);
-            }}
-          >
-            Create Account
-          </Button>{" "}
-          <Button
-            variant="secondary"
-            onClick={() => {
-              setView(2);
-            }}
-          >
-            Login
-          </Button>{" "}
-          <Button
-            variant="success"
-            onClick={() => {
-              setView(3);
-            }}
-          >
-            Reset Password
-          </Button>{" "}
-          <div className="text-center">{renderView(view)}</div>
-        </div>
+      <div className="App mt-5 text-center">
+        <Button
+          variant="primary"
+          onClick={() => {
+            setView(1);
+          }}
+        >
+          Create Account
+        </Button>{" "}
+        <Button
+          variant="secondary"
+          onClick={() => {
+            setView(2);
+          }}
+        >
+          Login
+        </Button>{" "}
+        <Button
+          variant="success"
+          onClick={() => {
+            setView(3);
+          }}
+        >
+          Reset Password
+        </Button>{" "}
+        <div className="text-center">{renderView(view)}</div>
+      </div>
+    </Container>
+  ) : (
+    <Container>
+      <Button
+        variant="error"
+        onClick={() => {
+          setView(0);
+          setIsLoggedIn(false);
+        }}
+      >
+       Log out
+      </Button>{" "}
     </Container>
   );
 }

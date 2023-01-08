@@ -6,7 +6,7 @@ import Col from "react-bootstrap/Col";
 import md5 from "md5";
 import Alert from "react-bootstrap/Alert";
 
-const Login = (props) => {
+const ResetPassword = (props) => {
   const emailInputRef = useRef();
   const passwordInputRef = useRef();
   const [showSuccess, setShowSuccess] = useState(false);
@@ -18,7 +18,7 @@ const Login = (props) => {
     const hashedPassword = md5(password);
 
     console.log(hashedPassword);
-    fetch("http://localhost:3002/api/login/"+email+"/"+hashedPassword, {
+    fetch("http://localhost:3002/api/login/" + email + "/" + hashedPassword, {
       method: "GET",
       headers: {
         Accept: "application/json",
@@ -26,17 +26,14 @@ const Login = (props) => {
       },
     })
       .then((r) => {
-        if(r.status ===200)
-        {
-            setShowSuccess(true);
-            props.login(true);
+        if (r.status === 200) {
+          setShowSuccess(true);
+          props.login(true);
+        } else {
+          setErrorText("Wrong password or user does not exists");
+          setShowError(true);
         }
-        else
-        {
-            setErrorText("Wrong password or user does not exists");
-            setShowError(true);
-        }
-        console.log(r)
+        console.log(r);
       })
       .catch((e) => {
         setErrorText(e);
@@ -46,7 +43,7 @@ const Login = (props) => {
   return (
     <>
       <Container fluid className="justify-content-center">
-        <h1>Login page</h1>
+        <h1>Reset password page</h1>
         <form>
           <input
             style={{ padding: "15px", borderRadius: "10px", margin: "10px" }}
@@ -97,4 +94,4 @@ const Login = (props) => {
   );
 };
 
-export default Login;
+export default ResetPassword;
