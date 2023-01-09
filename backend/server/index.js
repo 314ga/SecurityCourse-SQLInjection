@@ -29,10 +29,10 @@ app.get("/api/get/:id", (req, res) => {
 app.post("/api/reset/:id/:psw/:oldpsw", (req, res) => {
   const userId = req.params.id.toString();
   const pswd = req.params.psw.toString();
-  const oldPswd = "'"+req.params.oldpsw.toString()+"'";
+  const oldPswd = req.params.oldpsw.toString();
 
   let obj = {
-    password: pswd,
+    password: oldPswd,
   };
   query.configure({
     host: "localhost",
@@ -43,11 +43,21 @@ app.post("/api/reset/:id/:psw/:oldpsw", (req, res) => {
   query.base.update(
     "users",
     obj,
-    oldPswd,
+    pswd,
     "email = '" + userId + "' AND password",
     (msg, resp) => {
+      console.log("MSG:" + msg)
       console.log(msg, resp);
-      res.send('OK');
+      if(resp === 0)
+      {
+res.status(400);
+res.send("Wrong username or password");
+      }
+      else
+      {
+res.send("OK");
+      }
+      
     }
   );
 });
@@ -100,11 +110,26 @@ app.post("/api/add_user", function (req, res) {
     password: "",
     database: "security",
   });
-  
-  query.base.create("users", obj, (msg, resp) => {
-    console.log(msg, resp);
-    res.send(resp);
+
+  query.base.fetchById("users", obj.email, "email", (msg, resp) => {
+    console.log(resp);
+    if (resp[0]) {
+      res.status(403);
+      res.send("USER EXISTS");
+    } else {
+       query.configure({
+         host: "localhost",
+         user: "root",
+         password: "",
+         database: "security",
+       });
+       query.base.create("users", obj, (msg, resp) => {
+       console.log(msg, resp);
+       res.send(resp);
+     });
+    }
   });
+  
 });  
 
 app.listen(PORT, () => {

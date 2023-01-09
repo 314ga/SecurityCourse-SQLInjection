@@ -37,9 +37,8 @@ const ResetPassword = (props) => {
       .then((r) => {
         if (r  === "OK") {
           setShowSuccess(true);
-          props.login(true);
         } else {
-          setErrorText("Error changing password");
+          setErrorText("Username or password didn't match");
           setShowError(true);
         }
         console.log(r);
@@ -80,11 +79,11 @@ const ResetPassword = (props) => {
               handleLoginForm();
             }}
           >
-            Login
+            Reset password
           </button>
         </form>
         <Alert show={showSuccess} variant="success">
-          <p> Welcome!</p>
+          <p>Password succesfully changed</p>
 
           <div className="d-flex justify-content-end">
             <Button

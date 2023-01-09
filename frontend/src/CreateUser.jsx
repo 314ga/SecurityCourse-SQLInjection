@@ -41,11 +41,17 @@ const [errorText, setErrorText] = useState("");
         name: name
       }),
     }).then(r=>{
+      if(r.status === 403)
+      {
+        setErrorText("User already exists");
+        setShowError(true);
+      }
+      else
        setShowSuccess(true);
 
     }).catch(e=>{
        setErrorText(e);
-        setErrorText(e);
+        setShowError(true);
     });
   }
   return (
