@@ -2,7 +2,8 @@ import { useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Container from "react-bootstrap/Container";
 import { Button } from "react-bootstrap";
-
+import Row from "react-bootstrap/Row";
+import Col from "react-bootstrap/Col";
 import CreateUser from "./CreateUser";
 import Login from "./Login";
 import ResetPassword from "./ResetPassword";
@@ -57,33 +58,7 @@ function App() {
 
   }
 
-  function handleLoginForm() {
 
-    fetch("http://localhost:3002/api/get/MariaF@gmail.com", {
-      //'%20or%201=1--%20
-      method: "GET",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-    })
-      .then((r) => {
-        if (r.status === 200) {
-          return r.json();
-        } else {
-          return null;
-        }
-      })
-      .then((data) => {
-        console.log(data);
-      })
-      .catch((e) => {
-        console.log(e);
-      })
-      .catch((e) => {
-        console.log(e);
-      });
-  }
 
   return !isLoggedIn ? (
     <Container fluid className="justify-content-center">
@@ -116,28 +91,26 @@ function App() {
       </div>
     </Container>
   ) : (
-    <Container>
-      <Profile />
-      {/* pass email as prop to profile */}
-      <Button
-        variant="success"
-        onClick={() => {
-          setView(0);
-          setIsLoggedIn(false);
-        }}
-      >
-        Log out
-      </Button>{" "}
-      <button
-        type="submit"
-        style={{ padding: "15px", borderRadius: "10px", margin: "10px" }}
-        onClick={(e) => {
-          e.preventDefault();
-          handleLoginForm();
-        }}
-      >
-        Login
-      </button>
+    <Container className='p-5'>
+      <Row className="">
+        <Col xs={12} className="mx-auto">
+          <Button
+            variant="success"
+            onClick={() => {
+              setView(0);
+              setIsLoggedIn(false);
+            }}
+          >
+            Log out
+          </Button>
+        </Col>
+        <Col xs={12} className=" ">
+          <Profile emailProp={email} />
+        </Col>
+      </Row>
+
+
+
     </Container>
   );
 }
